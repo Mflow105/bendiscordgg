@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bendc.gg - Economy System</title>
+    <title>Bendc.gg - Discord Economy Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -137,6 +137,9 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         
         .btn-primary {
@@ -306,6 +309,7 @@
             z-index: 1000;
             animation: slideIn 0.3s ease;
             max-width: 400px;
+            white-space: pre-line;
         }
         
         .notification.error {
@@ -452,15 +456,15 @@
         <!-- Admin Login Modal (HIDDEN by default) -->
         <div id="adminLoginModal" class="modal hidden">
             <div class="modal-content">
-                <h2>🔒 Đăng Nhập Admin</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Chỉ dành cho quản trị viên</p>
+                <h2>🔒 Admin Login</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">For administrators only</p>
                 <div class="form-group">
-                    <label for="adminPassword">Mật khẩu Admin</label>
-                    <input type="password" id="adminPassword" placeholder="Nhập mật khẩu admin">
+                    <label for="adminPassword">Admin Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password">
                 </div>
                 <div style="display: flex; gap: 1rem;">
-                    <button class="btn btn-primary" onclick="verifyAdminPassword()">Xác Nhận</button>
-                    <button class="btn btn-danger" onclick="closeAdminLogin()">Hủy</button>
+                    <button class="btn btn-primary" onclick="verifyAdminPassword()">Confirm</button>
+                    <button class="btn btn-danger" onclick="closeAdminLogin()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -469,16 +473,16 @@
         <div id="userPage">
             <!-- Login Section -->
             <div id="authSection" class="auth-section">
-                <h2>🔐 Đăng Nhập</h2>
+                <h2>🔐 Login</h2>
                 <div class="form-group">
-                    <label for="username">Tên người dùng Discord</label>
-                    <input type="text" id="username" placeholder="Nhập tên người dùng của bạn">
+                    <label for="username">Discord Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
                 </div>
                 <div class="form-group">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" placeholder="Nhập mật khẩu">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
                 </div>
-                <button class="btn btn-primary" onclick="login()">Đăng Nhập</button>
+                <button class="btn btn-primary" onclick="login()">Login</button>
             </div>
             
             <!-- Dashboard -->
@@ -486,7 +490,7 @@
                 <div class="user-info">
                     <div>
                         <div class="user-name">👤 <span id="displayUsername"></span></div>
-                        <button class="btn btn-danger mt-2" onclick="logout()">Đăng Xuất</button>
+                        <button class="btn btn-danger mt-2" onclick="logout()">Logout</button>
                     </div>
                     <div>
                         <div class="user-balance">💰 $<span id="userBalance">0</span></div>
@@ -495,19 +499,19 @@
                 
                 <div class="actions-grid">
                     <div class="action-card">
-                        <h3>🎁 Phần Thưởng Random</h3>
-                        <p>Nhận ngẫu nhiên từ $1,000 đến $3,500 mỗi ngày!</p>
+                        <h3>🎁 Daily Reward</h3>
+                        <p>Get a random reward between $1,000 and $3,500 every day!</p>
                         <div class="reward-info">
-                            <strong>Trạng thái:</strong> <span id="dailyStatus">Sẵn sàng</span>
+                            <strong>Status:</strong> <span id="dailyStatus">Available</span>
                         </div>
-                        <button class="btn btn-success" id="dailyBtn" onclick="claimDailyReward()">Nhận Thưởng</button>
+                        <button class="btn btn-success" id="dailyBtn" onclick="claimDailyReward()">Claim Reward</button>
                     </div>
                     
                     <div class="action-card">
-                        <h3>🔗 Nhiệm Vụ Link</h3>
-                        <p>Vượt link để nhận $500 mỗi lần (Tối đa 3 lần/ngày)</p>
+                        <h3>🔗 Link Tasks</h3>
+                        <p>Complete link tasks to earn $500 each (Maximum 3 times/day)</p>
                         <div class="reward-info">
-                            <strong>Hôm nay:</strong> <span id="linkCount">0</span>/3 lần
+                            <strong>Today:</strong> <span id="linkCount">0</span>/3 times
                         </div>
                         
                         <!-- Get Link Button -->
@@ -515,41 +519,41 @@
                         
                         <!-- Link Options (Hidden by default) -->
                         <div id="linkOptions" class="hidden" style="margin-bottom: 1rem; padding: 1rem; background: var(--darker); border-radius: 8px;">
-                            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Chọn link để vượt:</p>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Choose a link to complete:</p>
                             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                                 <a href="https://direct-link.net/459633/pmtSwxoaVvJe" target="_blank" class="btn btn-primary btn-small">🔗 Link 1</a>
                                 <a href="https://link-center.net/459633/JnlEHMWqjncp" target="_blank" class="btn btn-primary btn-small">🔗 Link 2</a>
                                 <a href="https://link-target.net/459633/mlHj3bprEy5a" target="_blank" class="btn btn-primary btn-small">🔗 Link 3</a>
                             </div>
-                            <p style="color: var(--warning); margin-top: 1rem; font-size: 0.85rem;">⚠️ Sau khi vượt link, bạn sẽ nhận được code. Quay lại đây và nhập code bên dưới.</p>
+                            <p style="color: var(--warning); margin-top: 1rem; font-size: 0.85rem;">⚠️ After completing the link, you will receive a code. Come back here and enter the code below.</p>
                         </div>
                         
                         <!-- Code Input -->
                         <div style="margin-top: 1rem;">
-                            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Nhập code sau khi vượt link:</label>
-                            <input type="text" id="linkCodeInput" placeholder="VD: BEN-U813NZ93PV8N38MC16" style="margin-bottom: 1rem; text-transform: uppercase;">
-                            <button class="btn btn-success" onclick="verifyLinkCode()">✅ Xác Nhận Code</button>
+                            <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Enter code after completing link:</label>
+                            <input type="text" id="linkCodeInput" placeholder="E.g., BEN-U813NZ93PV8N38MC16" style="margin-bottom: 1rem; text-transform: uppercase;">
+                            <button class="btn btn-success" onclick="verifyLinkCode()">✅ Verify Code</button>
                         </div>
                     </div>
                     
                     <div class="action-card">
-                        <h3>💸 Chuyển Tiền Discord</h3>
-                        <p>Yêu cầu chuyển tiền vào tài khoản Discord của bạn</p>
+                        <h3>💸 Transfer to Discord</h3>
+                        <p>Request to transfer money to your Discord account</p>
                         <div class="reward-info">
-                            <strong>Số dư:</strong> $<span id="balanceForTransfer">0</span>
+                            <strong>Balance:</strong> $<span id="balanceForTransfer">0</span>
                         </div>
-                        <input type="number" id="transferAmount" placeholder="Số tiền muốn chuyển" style="margin-bottom: 1rem;">
-                        <button class="btn btn-primary" onclick="requestTransfer()">Yêu Cầu Chuyển</button>
+                        <input type="number" id="transferAmount" placeholder="Amount to transfer" style="margin-bottom: 1rem;">
+                        <button class="btn btn-primary" onclick="requestTransfer()">Request Transfer</button>
                     </div>
                 </div>
                 
                 <div class="leaderboard">
-                    <h2>🏆 BẢNG XẾP HẠNG</h2>
-                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Cập nhật mỗi ngày</p>
+                    <h2>🏆 LEADERBOARD</h2>
+                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Updated daily</p>
                     <ul class="leaderboard-list" id="leaderboardList">
                         <li class="leaderboard-item">
                             <span class="rank rank-1">#1</span>
-                            <span class="player-name">Đang tải...</span>
+                            <span class="player-name">Loading...</span>
                             <span class="player-balance">$0</span>
                         </li>
                     </ul>
@@ -561,57 +565,58 @@
         <div id="adminPage" class="hidden">
             <div class="admin-header">
                 <h2 class="admin-title">⚙️ ADMIN PANEL</h2>
-                <button class="btn btn-danger btn-small" onclick="exitAdmin()">← Quay Lại</button>
+                <button class="btn btn-danger btn-small" onclick="exitAdmin()">← Back</button>
             </div>
             
             <div class="admin-card">
-                <h2>➕ Tạo Tài Khoản Mới</h2>
+                <h2>➕ Create New Account</h2>
                 <div class="info-box">
-                    💡 Tạo tài khoản cho người dùng Discord. Họ sẽ dùng thông tin này để đăng nhập.
+                    💡 Create an account for Discord users. They will use this information to login.
                 </div>
                 
                 <div class="form-group">
-                    <label for="newUsername">Tên người dùng Discord</label>
-                    <input type="text" id="newUsername" placeholder="VD: Player#1234">
+                    <label for="newUsername">Discord Username</label>
+                    <input type="text" id="newUsername" placeholder="E.g., Player#1234">
                 </div>
                 
                 <div class="form-group">
-                    <label for="newPassword">Mật khẩu</label>
-                    <input type="password" id="newPassword" placeholder="Tạo mật khẩu mạnh">
+                    <label for="newPassword">Password</label>
+                    <input type="password" id="newPassword" placeholder="Create a strong password">
                 </div>
                 
                 <div class="form-group">
-                    <label for="initialBalance">Số dư ban đầu (tùy chọn)</label>
+                    <label for="initialBalance">Initial Balance (optional)</label>
                     <input type="number" id="initialBalance" placeholder="0" value="0">
                 </div>
                 
-                <button class="btn btn-success" onclick="createAccount()">Tạo Tài Khoản</button>
+                <button class="btn btn-success" onclick="createAccount()">Create Account</button>
             </div>
             
             <div class="admin-card">
-                <h2>👥 Danh Sách Người Dùng</h2>
-                <button class="btn btn-warning" onclick="loadUsers()" style="margin-bottom: 1rem;">🔄 Làm Mới</button>
+                <h2>👥 User List</h2>
+                <button class="btn btn-warning" onclick="loadUsers()" style="margin-bottom: 1rem;">🔄 Refresh</button>
                 <div class="user-list" id="userList">
-                    <p style="text-align: center; color: var(--text-muted);">Nhấn "Làm Mới" để tải danh sách</p>
+                    <p style="text-align: center; color: var(--text-muted);">Click "Refresh" to load the list</p>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Footer with Admin Button -->
+    <!-- Footer -->
     <footer>
         <button class="btn btn-danger" onclick="showAdminLogin()">⚙️ Admin Panel</button>
         <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">© 2026 Bendc.gg - Discord Economy Game</p>
     </footer>
 
     <script>
+        // Using localStorage instead of window.storage for production deployment
         let currentUser = null;
         let userData = {};
         let allUsers = [];
         let leaderboardData = [];
         
         const LINK_REWARD = 500;
-        const MAX_LINKS_PER_DAY = 3;  // Changed from 5 to 3
+        const MAX_LINKS_PER_DAY = 3;
         const MIN_DAILY_REWARD = 1000;
         const MAX_DAILY_REWARD = 3500;
         
@@ -622,8 +627,46 @@
             'BEN-U4C8N9ZQ3MPA'
         ];
         
-        // ⚠️ THAY ĐỔI MẬT KHẨU ADMIN Ở ĐÂY
+        // ⚠️ CHANGE ADMIN PASSWORD HERE
         const ADMIN_PASSWORD = "admin123";
+        
+        // LocalStorage helper functions
+        const storage = {
+            get: (key) => {
+                try {
+                    const item = localStorage.getItem(key);
+                    return item ? JSON.parse(item) : null;
+                } catch (e) {
+                    return null;
+                }
+            },
+            set: (key, value) => {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            },
+            delete: (key) => {
+                try {
+                    localStorage.removeItem(key);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            },
+            list: (prefix) => {
+                const keys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith(prefix)) {
+                        keys.push(key);
+                    }
+                }
+                return keys;
+            }
+        };
         
         // Show admin login modal
         function showAdminLogin() {
@@ -644,9 +687,9 @@
             if (password === ADMIN_PASSWORD) {
                 closeAdminLogin();
                 enterAdminMode();
-                showNotification('✅ Đăng nhập Admin thành công!', 'success');
+                showNotification('✅ Admin login successful!', 'success');
             } else {
-                showNotification('❌ Mật khẩu admin không đúng!', 'error');
+                showNotification('❌ Incorrect admin password!', 'error');
                 document.getElementById('adminPassword').value = '';
             }
         }
@@ -664,83 +707,61 @@
             document.getElementById('userPage').classList.remove('hidden');
         }
         
-        // Check storage
-        function checkStorage() {
-            if (!window.storage) {
-                showNotification('Storage không khả dụng!', 'error');
-                return false;
-            }
-            return true;
-        }
-        
         // USER FUNCTIONS
-        async function login() {
-            if (!checkStorage()) return;
-            
+        function login() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
             if (!username || !password) {
-                showNotification('Vui lòng nhập đầy đủ thông tin!', 'error');
+                showNotification('Please enter all information!', 'error');
                 return;
             }
             
-            try {
-                const result = await window.storage.get(`user:${username}`);
-                
-                if (!result) {
-                    showNotification('Tài khoản không tồn tại!', 'error');
-                    return;
-                }
-                
-                const user = JSON.parse(result.value);
-                
-                if (user.password !== password) {
-                    showNotification('Mật khẩu không đúng!', 'error');
-                    return;
-                }
-                
-                currentUser = username;
-                localStorage.setItem('bendc_user', username);
-                await loadUserData();
-                showDashboard();
-                showNotification('Đăng nhập thành công!', 'success');
-            } catch (error) {
-                console.error('Login error:', error);
-                showNotification('Tài khoản không tồn tại!', 'error');
+            const user = storage.get(`user:${username}`);
+            
+            if (!user) {
+                showNotification('Account does not exist!', 'error');
+                return;
             }
+            
+            if (user.password !== password) {
+                showNotification('Incorrect password!', 'error');
+                return;
+            }
+            
+            currentUser = username;
+            localStorage.setItem('bendc_current_user', username);
+            loadUserData();
+            showDashboard();
+            showNotification('Login successful!', 'success');
         }
         
         function logout() {
             currentUser = null;
-            localStorage.removeItem('bendc_user');
+            localStorage.removeItem('bendc_current_user');
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-            showNotification('Đã đăng xuất!', 'success');
+            showNotification('Logged out!', 'success');
         }
         
-        async function loadUserData() {
-            try {
-                const result = await window.storage.get(`user:${currentUser}`);
-                if (result) {
-                    userData = JSON.parse(result.value);
-                }
-                updateUI();
-            } catch (error) {
-                console.error('Error loading user data:', error);
-            }
+        function loadUserData() {
+            userData = storage.get(`user:${currentUser}`) || {
+                username: currentUser,
+                password: '',
+                balance: 0,
+                lastDaily: null,
+                linksToday: 0,
+                usedCodes: [],
+                lastLinkReset: null
+            };
+            updateUI();
         }
         
-        async function saveUserData() {
-            try {
-                await window.storage.set(`user:${currentUser}`, JSON.stringify(userData));
-                updateUI();
-            } catch (error) {
-                console.error('Error saving user data:', error);
-                showNotification('Lỗi lưu dữ liệu!', 'error');
-            }
+        function saveUserData() {
+            storage.set(`user:${currentUser}`, userData);
+            updateUI();
         }
         
         function showDashboard() {
@@ -758,10 +779,10 @@
             const lastDaily = userData.lastDaily ? new Date(userData.lastDaily).toDateString() : null;
             
             if (lastDaily === today) {
-                document.getElementById('dailyStatus').textContent = 'Đã nhận hôm nay';
+                document.getElementById('dailyStatus').textContent = 'Claimed today';
                 document.getElementById('dailyBtn').disabled = true;
             } else {
-                document.getElementById('dailyStatus').textContent = 'Sẵn sàng';
+                document.getElementById('dailyStatus').textContent = 'Available';
                 document.getElementById('dailyBtn').disabled = false;
             }
             
@@ -772,7 +793,6 @@
                 userData.lastLinkReset = new Date().toISOString();
             }
             
-            // Initialize usedCodes if not exists
             if (!userData.usedCodes) {
                 userData.usedCodes = [];
             }
@@ -780,12 +800,12 @@
             document.getElementById('linkCount').textContent = userData.linksToday;
         }
         
-        async function claimDailyReward() {
+        function claimDailyReward() {
             const today = new Date().toDateString();
             const lastDaily = userData.lastDaily ? new Date(userData.lastDaily).toDateString() : null;
             
             if (lastDaily === today) {
-                showNotification('Bạn đã nhận thưởng hôm nay rồi!', 'warning');
+                showNotification('You already claimed your reward today!', 'warning');
                 return;
             }
             
@@ -793,12 +813,11 @@
             userData.balance += reward;
             userData.lastDaily = new Date().toISOString();
             
-            await saveUserData();
-            await updateLeaderboard();
-            showNotification(`🎉 Bạn nhận được $${reward.toLocaleString()}!`, 'success');
+            saveUserData();
+            updateLeaderboard();
+            showNotification(`🎉 You received $${reward.toLocaleString()}!`, 'success');
         }
         
-        // Show link options
         function showLinkOptions() {
             const today = new Date().toDateString();
             const lastLinkReset = userData.lastLinkReset ? new Date(userData.lastLinkReset).toDateString() : null;
@@ -810,31 +829,29 @@
             }
             
             if (userData.linksToday >= MAX_LINKS_PER_DAY) {
-                showNotification('Bạn đã đạt giới hạn 3 lần trong ngày!', 'warning');
+                showNotification('You have reached the 3 times daily limit!', 'warning');
                 return;
             }
             
             const linkOptions = document.getElementById('linkOptions');
             if (linkOptions.classList.contains('hidden')) {
                 linkOptions.classList.remove('hidden');
-                showNotification('Chọn một link để vượt. Sau khi hoàn thành, quay lại nhập code!', 'success');
+                showNotification('Choose a link to complete. After finishing, come back and enter the code!', 'success');
             } else {
                 linkOptions.classList.add('hidden');
             }
         }
         
-        // Verify link code
-        async function verifyLinkCode() {
+        function verifyLinkCode() {
             const code = document.getElementById('linkCodeInput').value.trim().toUpperCase();
             
             if (!code) {
-                showNotification('Vui lòng nhập code!', 'error');
+                showNotification('Please enter a code!', 'error');
                 return;
             }
             
-            // Check if code is valid
             if (!VALID_LINK_CODES.includes(code)) {
-                showNotification('Code không hợp lệ!', 'error');
+                showNotification('Invalid code!', 'error');
                 document.getElementById('linkCodeInput').value = '';
                 return;
             }
@@ -848,118 +865,90 @@
                 userData.lastLinkReset = new Date().toISOString();
             }
             
-            // Initialize usedCodes if not exists
             if (!userData.usedCodes) {
                 userData.usedCodes = [];
             }
             
-            // Check if code was already used today
             if (userData.usedCodes.includes(code)) {
-                showNotification('Code này đã được sử dụng hôm nay!', 'warning');
+                showNotification('This code has already been used today!', 'warning');
                 document.getElementById('linkCodeInput').value = '';
                 return;
             }
             
-            // Check daily limit
             if (userData.linksToday >= MAX_LINKS_PER_DAY) {
-                showNotification('Bạn đã đạt giới hạn 3 lần trong ngày!', 'warning');
+                showNotification('You have reached the 3 times daily limit!', 'warning');
                 return;
             }
             
-            // Award money and mark code as used
             userData.balance += LINK_REWARD;
             userData.linksToday += 1;
             userData.usedCodes.push(code);
             
-            await saveUserData();
-            await updateLeaderboard();
+            saveUserData();
+            updateLeaderboard();
             document.getElementById('linkCodeInput').value = '';
             document.getElementById('linkOptions').classList.add('hidden');
             
-            showNotification(`✅ Xác nhận thành công! +$${LINK_REWARD}\n\nBạn còn ${MAX_LINKS_PER_DAY - userData.linksToday} lần hôm nay.`, 'success');
+            showNotification(`✅ Verification successful! +$${LINK_REWARD}\n\nYou have ${MAX_LINKS_PER_DAY - userData.linksToday} remaining today.`, 'success');
         }
         
-        async function requestTransfer() {
+        function requestTransfer() {
             const amount = parseInt(document.getElementById('transferAmount').value);
             
             if (!amount || amount <= 0) {
-                showNotification('Vui lòng nhập số tiền hợp lệ!', 'error');
+                showNotification('Please enter a valid amount!', 'error');
                 return;
             }
             
             if (amount > userData.balance) {
-                showNotification('Số dư không đủ!', 'error');
+                showNotification('Insufficient balance!', 'error');
                 return;
             }
             
-            try {
-                const requestId = `transfer:${currentUser}:${Date.now()}`;
-                const request = {
+            const requestId = `transfer:${currentUser}:${Date.now()}`;
+            const request = {
+                username: currentUser,
+                amount: amount,
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            storage.set(requestId, request);
+            
+            showNotification(`Transfer request for $${amount.toLocaleString()} has been sent!`, 'success');
+            document.getElementById('transferAmount').value = '';
+        }
+        
+        function loadLeaderboard() {
+            leaderboardData = storage.get('leaderboard') || [];
+            displayLeaderboard();
+        }
+        
+        function updateLeaderboard() {
+            let leaderboard = storage.get('leaderboard') || [];
+            
+            const userIndex = leaderboard.findIndex(u => u.username === currentUser);
+            if (userIndex !== -1) {
+                leaderboard[userIndex].balance = userData.balance;
+            } else {
+                leaderboard.push({
                     username: currentUser,
-                    amount: amount,
-                    timestamp: new Date().toISOString(),
-                    status: 'pending'
-                };
-                
-                await window.storage.set(requestId, JSON.stringify(request), true);
-                
-                showNotification(`Yêu cầu chuyển $${amount.toLocaleString()} đã được gửi!`, 'success');
-                document.getElementById('transferAmount').value = '';
-            } catch (error) {
-                console.error('Error creating transfer request:', error);
-                showNotification('Lỗi tạo yêu cầu!', 'error');
+                    balance: userData.balance
+                });
             }
-        }
-        
-        async function loadLeaderboard() {
-            try {
-                const result = await window.storage.get('leaderboard', true);
-                if (result) {
-                    leaderboardData = JSON.parse(result.value);
-                    displayLeaderboard();
-                }
-            } catch (error) {
-                console.log('No leaderboard data yet');
-            }
-        }
-        
-        async function updateLeaderboard() {
-            try {
-                let leaderboard = [];
-                try {
-                    const result = await window.storage.get('leaderboard', true);
-                    if (result) {
-                        leaderboard = JSON.parse(result.value);
-                    }
-                } catch (error) {
-                    leaderboard = [];
-                }
-                
-                const userIndex = leaderboard.findIndex(u => u.username === currentUser);
-                if (userIndex !== -1) {
-                    leaderboard[userIndex].balance = userData.balance;
-                } else {
-                    leaderboard.push({
-                        username: currentUser,
-                        balance: userData.balance
-                    });
-                }
-                
-                leaderboard.sort((a, b) => b.balance - a.balance);
-                leaderboard = leaderboard.slice(0, 10);
-                
-                await window.storage.set('leaderboard', JSON.stringify(leaderboard), true);
-                leaderboardData = leaderboard;
-                displayLeaderboard();
-            } catch (error) {
-                console.error('Error updating leaderboard:', error);
-            }
+            
+            leaderboard.sort((a, b) => b.balance - a.balance);
+            leaderboard = leaderboard.slice(0, 10);
+            
+            storage.set('leaderboard', leaderboard);
+            leaderboardData = leaderboard;
+            displayLeaderboard();
         }
         
         function displayLeaderboard() {
             const list = document.getElementById('leaderboardList');
             if (leaderboardData.length === 0) {
-                list.innerHTML = '<li class="leaderboard-item"><span class="player-name">Chưa có dữ liệu</span></li>';
+                list.innerHTML = '<li class="leaderboard-item"><span class="player-name">No data available</span></li>';
                 return;
             }
             
@@ -973,102 +962,59 @@
         }
         
         // ADMIN FUNCTIONS
-        async function createAccount() {
-            if (!checkStorage()) return;
-            
+        function createAccount() {
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
             const balance = parseInt(document.getElementById('initialBalance').value) || 0;
             
             if (!username || !password) {
-                showNotification('Vui lòng nhập đầy đủ thông tin!', 'error');
+                showNotification('Please enter all information!', 'error');
                 return;
             }
             
             if (password.length < 6) {
-                showNotification('Mật khẩu phải có ít nhất 6 ký tự!', 'error');
+                showNotification('Password must be at least 6 characters!', 'error');
                 return;
             }
             
-            try {
-                let existing = null;
-                try {
-                    existing = await window.storage.get(`user:${username}`);
-                } catch (e) {
-                    console.log('Creating new user');
-                }
-                
-                if (existing) {
-                    showNotification('Tài khoản đã tồn tại!', 'error');
-                    return;
-                }
-                
-                const newUser = {
-                    username: username,
-                    password: password,
-                    balance: balance,
-                    lastDaily: null,
-                    linksToday: 0,
-                    lastLinkReset: null,
-                    createdAt: new Date().toISOString()
-                };
-                
-                await window.storage.set(`user:${username}`, JSON.stringify(newUser));
-                
-                showNotification(`✅ Tạo thành công!\n\nUsername: ${username}\nPassword: ${password}`, 'success');
-                
-                document.getElementById('newUsername').value = '';
-                document.getElementById('newPassword').value = '';
-                document.getElementById('initialBalance').value = '0';
-                
-                setTimeout(() => loadUsers(), 500);
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Lỗi tạo tài khoản!', 'error');
+            if (storage.get(`user:${username}`)) {
+                showNotification('Account already exists!', 'error');
+                return;
             }
+            
+            const newUser = {
+                username: username,
+                password: password,
+                balance: balance,
+                lastDaily: null,
+                linksToday: 0,
+                usedCodes: [],
+                lastLinkReset: null,
+                createdAt: new Date().toISOString()
+            };
+            
+            storage.set(`user:${username}`, newUser);
+            
+            showNotification(`✅ Account created successfully!\n\nUsername: ${username}\nPassword: ${password}`, 'success');
+            
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('initialBalance').value = '0';
+            
+            setTimeout(() => loadUsers(), 500);
         }
         
-        async function loadUsers() {
-            if (!checkStorage()) return;
-            
-            try {
-                let keys = null;
-                try {
-                    keys = await window.storage.list('user:');
-                } catch (e) {
-                    console.log('No users yet');
-                }
-                
-                if (!keys || !keys.keys || keys.keys.length === 0) {
-                    document.getElementById('userList').innerHTML = '<p style="text-align: center; color: var(--text-muted);">Chưa có người dùng nào</p>';
-                    return;
-                }
-                
-                allUsers = [];
-                
-                for (const key of keys.keys) {
-                    try {
-                        const result = await window.storage.get(key);
-                        if (result) {
-                            allUsers.push(JSON.parse(result.value));
-                        }
-                    } catch (error) {
-                        console.error('Error loading user:', error);
-                    }
-                }
-                
-                displayUsers();
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Lỗi tải danh sách!', 'error');
-            }
+        function loadUsers() {
+            const userKeys = storage.list('user:');
+            allUsers = userKeys.map(key => storage.get(key)).filter(u => u);
+            displayUsers();
         }
         
         function displayUsers() {
             const list = document.getElementById('userList');
             
             if (allUsers.length === 0) {
-                list.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Chưa có người dùng nào</p>';
+                list.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No users yet</p>';
                 return;
             }
             
@@ -1078,23 +1024,19 @@
                 <div class="user-item">
                     <div class="user-item-info">
                         <div class="user-item-name">${user.username}</div>
-                        <div class="user-item-balance">Số dư: $${user.balance.toLocaleString()}</div>
+                        <div class="user-item-balance">Balance: $${user.balance.toLocaleString()}</div>
                     </div>
-                    <button class="btn btn-danger btn-small" onclick="deleteUser('${user.username}')">Xóa</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteUser('${user.username}')">Delete</button>
                 </div>
             `).join('');
         }
         
-        async function deleteUser(username) {
-            if (!confirm(`Bạn có chắc muốn xóa tài khoản ${username}?`)) return;
+        function deleteUser(username) {
+            if (!confirm(`Are you sure you want to delete ${username}'s account?`)) return;
             
-            try {
-                await window.storage.delete(`user:${username}`);
-                showNotification('Đã xóa tài khoản!', 'success');
-                await loadUsers();
-            } catch (error) {
-                showNotification('Lỗi xóa tài khoản!', 'error');
-            }
+            storage.delete(`user:${username}`);
+            showNotification('Account deleted!', 'success');
+            loadUsers();
         }
         
         function showNotification(message, type = 'success') {
@@ -1109,23 +1051,19 @@
         }
         
         // Initialize
-        async function init() {
-            if (!checkStorage()) return;
-            
-            // Make sure modal is hidden on load
+        function init() {
             document.getElementById('adminLoginModal').classList.add('hidden');
             
-            // Add Enter key listener for admin password
             document.getElementById('adminPassword').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     verifyAdminPassword();
                 }
             });
             
-            const savedUser = localStorage.getItem('bendc_user');
+            const savedUser = localStorage.getItem('bendc_current_user');
             if (savedUser) {
                 currentUser = savedUser;
-                await loadUserData();
+                loadUserData();
                 showDashboard();
             }
         }
