@@ -142,12 +142,17 @@
             text-align: center;
         }
         
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
         .btn-primary {
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
         }
         
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
         }
@@ -157,7 +162,7 @@
             color: white;
         }
         
-        .btn-success:hover {
+        .btn-success:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(67, 181, 129, 0.4);
         }
@@ -167,7 +172,7 @@
             color: white;
         }
         
-        .btn-warning:hover {
+        .btn-warning:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(250, 166, 26, 0.4);
         }
@@ -177,7 +182,7 @@
             color: white;
         }
         
-        .btn-danger:hover {
+        .btn-danger:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(240, 71, 71, 0.4);
         }
@@ -414,6 +419,12 @@
             border-top: 1px solid rgba(88, 101, 242, 0.2);
         }
         
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+        
         @keyframes glow {
             from {
                 filter: drop-shadow(0 0 20px rgba(88, 101, 242, 0.5));
@@ -453,7 +464,7 @@
             <p class="tagline">Discord Economy Mini Game</p>
         </header>
         
-        <!-- Admin Login Modal (HIDDEN by default) -->
+        <!-- Admin Login Modal -->
         <div id="adminLoginModal" class="modal hidden">
             <div class="modal-content">
                 <h2>🔒 Admin Login</h2>
@@ -469,7 +480,7 @@
             </div>
         </div>
         
-        <!-- USER PAGE (DEFAULT - ALWAYS SHOWN FIRST) -->
+        <!-- USER PAGE -->
         <div id="userPage">
             <!-- Login Section -->
             <div id="authSection" class="auth-section">
@@ -514,10 +525,8 @@
                             <strong>Today:</strong> <span id="linkCount">0</span>/3 times
                         </div>
                         
-                        <!-- Get Link Button -->
                         <button class="btn btn-warning" onclick="showLinkOptions()" style="margin-bottom: 1rem;">📋 Get Link</button>
                         
-                        <!-- Link Options (Hidden by default) -->
                         <div id="linkOptions" class="hidden" style="margin-bottom: 1rem; padding: 1rem; background: var(--darker); border-radius: 8px;">
                             <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Choose a link to complete:</p>
                             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
@@ -528,7 +537,6 @@
                             <p style="color: var(--warning); margin-top: 1rem; font-size: 0.85rem;">⚠️ After completing the link, you will receive a code. Come back here and enter the code below.</p>
                         </div>
                         
-                        <!-- Code Input -->
                         <div style="margin-top: 1rem;">
                             <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Enter code after completing link:</label>
                             <input type="text" id="linkCodeInput" placeholder="E.g., BEN-U813NZ93PV8N38MC16" style="margin-bottom: 1rem; text-transform: uppercase;">
@@ -549,19 +557,17 @@
                 
                 <div class="leaderboard">
                     <h2>🏆 LEADERBOARD</h2>
-                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Updated daily</p>
+                    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Updated in real-time</p>
                     <ul class="leaderboard-list" id="leaderboardList">
                         <li class="leaderboard-item">
-                            <span class="rank rank-1">#1</span>
                             <span class="player-name">Loading...</span>
-                            <span class="player-balance">$0</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
         
-        <!-- ADMIN PAGE (HIDDEN by default) -->
+        <!-- ADMIN PAGE -->
         <div id="adminPage" class="hidden">
             <div class="admin-header">
                 <h2 class="admin-title">⚙️ ADMIN PANEL</h2>
@@ -596,91 +602,81 @@
                 <h2>👥 User List</h2>
                 <button class="btn btn-warning" onclick="loadUsers()" style="margin-bottom: 1rem;">🔄 Refresh</button>
                 <div class="user-list" id="userList">
-                    <p style="text-align: center; color: var(--text-muted);">Click "Refresh" to load the list</p>
+                    <p class="loading">Loading users...</p>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Footer -->
     <footer>
         <button class="btn btn-danger" onclick="showAdminLogin()">⚙️ Admin Panel</button>
         <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">© 2026 Bendc.gg - Discord Economy Game</p>
     </footer>
 
-    <script>
-        // Using localStorage instead of window.storage for production deployment
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, get, update, remove, onValue, query, orderByChild } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDYoYQQnGoVROS9bjvO6mkNMsYAvVPWWYY",
+            authDomain: "bendc-gg.firebaseapp.com",
+            databaseURL: "https://bendc-gg-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "bendc-gg",
+            storageBucket: "bendc-gg.firebasestorage.app",
+            messagingSenderId: "675783716893",
+            appId: "1:675783716893:web:791cfdece5843428da56f4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Global variables
         let currentUser = null;
         let userData = {};
-        let allUsers = [];
-        let leaderboardData = [];
         
         const LINK_REWARD = 500;
         const MAX_LINKS_PER_DAY = 3;
         const MIN_DAILY_REWARD = 1000;
         const MAX_DAILY_REWARD = 3500;
         
-        // Valid link codes
         const VALID_LINK_CODES = [
             'BEN-U813NZ93PV8N38MC16',
             'BEN-K92M7Q4A8LZP',
             'BEN-U4C8N9ZQ3MPA'
         ];
         
-        // ⚠️ CHANGE ADMIN PASSWORD HERE
         const ADMIN_PASSWORD = "admin123";
-        
-        // LocalStorage helper functions
-        const storage = {
-            get: (key) => {
-                try {
-                    const item = localStorage.getItem(key);
-                    return item ? JSON.parse(item) : null;
-                } catch (e) {
-                    return null;
-                }
-            },
-            set: (key, value) => {
-                try {
-                    localStorage.setItem(key, JSON.stringify(value));
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            },
-            delete: (key) => {
-                try {
-                    localStorage.removeItem(key);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            },
-            list: (prefix) => {
-                const keys = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key.startsWith(prefix)) {
-                        keys.push(key);
-                    }
-                }
-                return keys;
-            }
-        };
-        
-        // Show admin login modal
+
+        // Make functions global
+        window.showAdminLogin = showAdminLogin;
+        window.closeAdminLogin = closeAdminLogin;
+        window.verifyAdminPassword = verifyAdminPassword;
+        window.enterAdminMode = enterAdminMode;
+        window.exitAdmin = exitAdmin;
+        window.login = login;
+        window.logout = logout;
+        window.claimDailyReward = claimDailyReward;
+        window.showLinkOptions = showLinkOptions;
+        window.verifyLinkCode = verifyLinkCode;
+        window.requestTransfer = requestTransfer;
+        window.createAccount = createAccount;
+        window.loadUsers = loadUsers;
+        window.deleteUser = deleteUser;
+
+        // Admin functions
         function showAdminLogin() {
             document.getElementById('adminLoginModal').classList.remove('hidden');
             document.getElementById('adminPassword').focus();
         }
         
-        // Close admin login modal
         function closeAdminLogin() {
             document.getElementById('adminLoginModal').classList.add('hidden');
             document.getElementById('adminPassword').value = '';
         }
         
-        // Verify admin password
         function verifyAdminPassword() {
             const password = document.getElementById('adminPassword').value;
             
@@ -694,21 +690,19 @@
             }
         }
         
-        // Enter admin mode
         function enterAdminMode() {
             document.getElementById('userPage').classList.add('hidden');
             document.getElementById('adminPage').classList.remove('hidden');
             loadUsers();
         }
         
-        // Exit admin mode
         function exitAdmin() {
             document.getElementById('adminPage').classList.add('hidden');
             document.getElementById('userPage').classList.remove('hidden');
         }
-        
-        // USER FUNCTIONS
-        function login() {
+
+        // User functions
+        async function login() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
@@ -717,23 +711,32 @@
                 return;
             }
             
-            const user = storage.get(`user:${username}`);
-            
-            if (!user) {
-                showNotification('Account does not exist!', 'error');
-                return;
+            try {
+                const userRef = ref(database, 'users/' + sanitizeKey(username));
+                const snapshot = await get(userRef);
+                
+                if (!snapshot.exists()) {
+                    showNotification('Account does not exist!', 'error');
+                    return;
+                }
+                
+                const user = snapshot.val();
+                
+                if (user.password !== password) {
+                    showNotification('Incorrect password!', 'error');
+                    return;
+                }
+                
+                currentUser = username;
+                localStorage.setItem('bendc_current_user', username);
+                userData = user;
+                showDashboard();
+                loadLeaderboard();
+                showNotification('Login successful!', 'success');
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Login failed!', 'error');
             }
-            
-            if (user.password !== password) {
-                showNotification('Incorrect password!', 'error');
-                return;
-            }
-            
-            currentUser = username;
-            localStorage.setItem('bendc_current_user', username);
-            loadUserData();
-            showDashboard();
-            showNotification('Login successful!', 'success');
         }
         
         function logout() {
@@ -746,29 +749,11 @@
             showNotification('Logged out!', 'success');
         }
         
-        function loadUserData() {
-            userData = storage.get(`user:${currentUser}`) || {
-                username: currentUser,
-                password: '',
-                balance: 0,
-                lastDaily: null,
-                linksToday: 0,
-                usedCodes: [],
-                lastLinkReset: null
-            };
-            updateUI();
-        }
-        
-        function saveUserData() {
-            storage.set(`user:${currentUser}`, userData);
-            updateUI();
-        }
-        
         function showDashboard() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             document.getElementById('displayUsername').textContent = currentUser;
-            loadLeaderboard();
+            updateUI();
         }
         
         function updateUI() {
@@ -800,7 +785,7 @@
             document.getElementById('linkCount').textContent = userData.linksToday;
         }
         
-        function claimDailyReward() {
+        async function claimDailyReward() {
             const today = new Date().toDateString();
             const lastDaily = userData.lastDaily ? new Date(userData.lastDaily).toDateString() : null;
             
@@ -813,9 +798,19 @@
             userData.balance += reward;
             userData.lastDaily = new Date().toISOString();
             
-            saveUserData();
-            updateLeaderboard();
-            showNotification(`🎉 You received $${reward.toLocaleString()}!`, 'success');
+            try {
+                const userRef = ref(database, 'users/' + sanitizeKey(currentUser));
+                await update(userRef, {
+                    balance: userData.balance,
+                    lastDaily: userData.lastDaily
+                });
+                
+                updateUI();
+                showNotification(`🎉 You received $${reward.toLocaleString()}!`, 'success');
+            } catch (error) {
+                console.error('Error claiming reward:', error);
+                showNotification('Error claiming reward!', 'error');
+            }
         }
         
         function showLinkOptions() {
@@ -842,7 +837,7 @@
             }
         }
         
-        function verifyLinkCode() {
+        async function verifyLinkCode() {
             const code = document.getElementById('linkCodeInput').value.trim().toUpperCase();
             
             if (!code) {
@@ -884,15 +879,27 @@
             userData.linksToday += 1;
             userData.usedCodes.push(code);
             
-            saveUserData();
-            updateLeaderboard();
-            document.getElementById('linkCodeInput').value = '';
-            document.getElementById('linkOptions').classList.add('hidden');
-            
-            showNotification(`✅ Verification successful! +$${LINK_REWARD}\n\nYou have ${MAX_LINKS_PER_DAY - userData.linksToday} remaining today.`, 'success');
+            try {
+                const userRef = ref(database, 'users/' + sanitizeKey(currentUser));
+                await update(userRef, {
+                    balance: userData.balance,
+                    linksToday: userData.linksToday,
+                    usedCodes: userData.usedCodes,
+                    lastLinkReset: userData.lastLinkReset
+                });
+                
+                updateUI();
+                document.getElementById('linkCodeInput').value = '';
+                document.getElementById('linkOptions').classList.add('hidden');
+                
+                showNotification(`✅ Verification successful! +$${LINK_REWARD}\n\nYou have ${MAX_LINKS_PER_DAY - userData.linksToday} remaining today.`, 'success');
+            } catch (error) {
+                console.error('Error verifying code:', error);
+                showNotification('Error verifying code!', 'error');
+            }
         }
         
-        function requestTransfer() {
+        async function requestTransfer() {
             const amount = parseInt(document.getElementById('transferAmount').value);
             
             if (!amount || amount <= 0) {
@@ -905,47 +912,47 @@
                 return;
             }
             
-            const requestId = `transfer:${currentUser}:${Date.now()}`;
-            const request = {
-                username: currentUser,
-                amount: amount,
-                timestamp: new Date().toISOString(),
-                status: 'pending'
-            };
-            
-            storage.set(requestId, request);
-            
-            showNotification(`Transfer request for $${amount.toLocaleString()} has been sent!`, 'success');
-            document.getElementById('transferAmount').value = '';
-        }
-        
-        function loadLeaderboard() {
-            leaderboardData = storage.get('leaderboard') || [];
-            displayLeaderboard();
-        }
-        
-        function updateLeaderboard() {
-            let leaderboard = storage.get('leaderboard') || [];
-            
-            const userIndex = leaderboard.findIndex(u => u.username === currentUser);
-            if (userIndex !== -1) {
-                leaderboard[userIndex].balance = userData.balance;
-            } else {
-                leaderboard.push({
+            try {
+                const transferRef = ref(database, 'transfers/' + Date.now());
+                await set(transferRef, {
                     username: currentUser,
-                    balance: userData.balance
+                    amount: amount,
+                    timestamp: new Date().toISOString(),
+                    status: 'pending'
                 });
+                
+                showNotification(`Transfer request for $${amount.toLocaleString()} has been sent!`, 'success');
+                document.getElementById('transferAmount').value = '';
+            } catch (error) {
+                console.error('Error creating transfer:', error);
+                showNotification('Error creating transfer request!', 'error');
             }
-            
-            leaderboard.sort((a, b) => b.balance - a.balance);
-            leaderboard = leaderboard.slice(0, 10);
-            
-            storage.set('leaderboard', leaderboard);
-            leaderboardData = leaderboard;
-            displayLeaderboard();
         }
         
-        function displayLeaderboard() {
+        async function loadLeaderboard() {
+            try {
+                const usersRef = ref(database, 'users');
+                onValue(usersRef, (snapshot) => {
+                    const users = [];
+                    snapshot.forEach((childSnapshot) => {
+                        const user = childSnapshot.val();
+                        users.push({
+                            username: user.username,
+                            balance: user.balance
+                        });
+                    });
+                    
+                    users.sort((a, b) => b.balance - a.balance);
+                    const top10 = users.slice(0, 10);
+                    
+                    displayLeaderboard(top10);
+                });
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+            }
+        }
+        
+        function displayLeaderboard(leaderboardData) {
             const list = document.getElementById('leaderboardList');
             if (leaderboardData.length === 0) {
                 list.innerHTML = '<li class="leaderboard-item"><span class="player-name">No data available</span></li>';
@@ -960,9 +967,9 @@
                 </li>
             `).join('');
         }
-        
-        // ADMIN FUNCTIONS
-        function createAccount() {
+
+        // Admin functions
+        async function createAccount() {
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
             const balance = parseInt(document.getElementById('initialBalance').value) || 0;
@@ -977,66 +984,92 @@
                 return;
             }
             
-            if (storage.get(`user:${username}`)) {
-                showNotification('Account already exists!', 'error');
-                return;
+            try {
+                const userRef = ref(database, 'users/' + sanitizeKey(username));
+                const snapshot = await get(userRef);
+                
+                if (snapshot.exists()) {
+                    showNotification('Account already exists!', 'error');
+                    return;
+                }
+                
+                const newUser = {
+                    username: username,
+                    password: password,
+                    balance: balance,
+                    lastDaily: null,
+                    linksToday: 0,
+                    usedCodes: [],
+                    lastLinkReset: null,
+                    createdAt: new Date().toISOString()
+                };
+                
+                await set(userRef, newUser);
+                
+                showNotification(`✅ Account created successfully!\n\nUsername: ${username}\nPassword: ${password}`, 'success');
+                
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('initialBalance').value = '0';
+                
+                setTimeout(() => loadUsers(), 500);
+            } catch (error) {
+                console.error('Error creating account:', error);
+                showNotification('Error creating account!', 'error');
             }
-            
-            const newUser = {
-                username: username,
-                password: password,
-                balance: balance,
-                lastDaily: null,
-                linksToday: 0,
-                usedCodes: [],
-                lastLinkReset: null,
-                createdAt: new Date().toISOString()
-            };
-            
-            storage.set(`user:${username}`, newUser);
-            
-            showNotification(`✅ Account created successfully!\n\nUsername: ${username}\nPassword: ${password}`, 'success');
-            
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('initialBalance').value = '0';
-            
-            setTimeout(() => loadUsers(), 500);
         }
         
-        function loadUsers() {
-            const userKeys = storage.list('user:');
-            allUsers = userKeys.map(key => storage.get(key)).filter(u => u);
-            displayUsers();
-        }
-        
-        function displayUsers() {
-            const list = document.getElementById('userList');
-            
-            if (allUsers.length === 0) {
-                list.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No users yet</p>';
-                return;
-            }
-            
-            allUsers.sort((a, b) => b.balance - a.balance);
-            
-            list.innerHTML = allUsers.map(user => `
-                <div class="user-item">
-                    <div class="user-item-info">
-                        <div class="user-item-name">${user.username}</div>
-                        <div class="user-item-balance">Balance: $${user.balance.toLocaleString()}</div>
+        async function loadUsers() {
+            try {
+                const usersRef = ref(database, 'users');
+                const snapshot = await get(usersRef);
+                
+                const list = document.getElementById('userList');
+                
+                if (!snapshot.exists()) {
+                    list.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No users yet</p>';
+                    return;
+                }
+                
+                const users = [];
+                snapshot.forEach((childSnapshot) => {
+                    users.push(childSnapshot.val());
+                });
+                
+                users.sort((a, b) => b.balance - a.balance);
+                
+                list.innerHTML = users.map(user => `
+                    <div class="user-item">
+                        <div class="user-item-info">
+                            <div class="user-item-name">${user.username}</div>
+                            <div class="user-item-balance">Balance: $${user.balance.toLocaleString()}</div>
+                        </div>
+                        <button class="btn btn-danger btn-small" onclick="deleteUser('${user.username}')">Delete</button>
                     </div>
-                    <button class="btn btn-danger btn-small" onclick="deleteUser('${user.username}')">Delete</button>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showNotification('Error loading users!', 'error');
+            }
         }
         
-        function deleteUser(username) {
+        async function deleteUser(username) {
             if (!confirm(`Are you sure you want to delete ${username}'s account?`)) return;
             
-            storage.delete(`user:${username}`);
-            showNotification('Account deleted!', 'success');
-            loadUsers();
+            try {
+                const userRef = ref(database, 'users/' + sanitizeKey(username));
+                await remove(userRef);
+                showNotification('Account deleted!', 'success');
+                loadUsers();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                showNotification('Error deleting account!', 'error');
+            }
+        }
+
+        // Helper functions
+        function sanitizeKey(key) {
+            return key.replace(/[.#$[\]]/g, '_');
         }
         
         function showNotification(message, type = 'success') {
@@ -1049,9 +1082,9 @@
                 notification.remove();
             }, 4000);
         }
-        
+
         // Initialize
-        function init() {
+        async function init() {
             document.getElementById('adminLoginModal').classList.add('hidden');
             
             document.getElementById('adminPassword').addEventListener('keypress', function(e) {
@@ -1062,9 +1095,21 @@
             
             const savedUser = localStorage.getItem('bendc_current_user');
             if (savedUser) {
-                currentUser = savedUser;
-                loadUserData();
-                showDashboard();
+                try {
+                    const userRef = ref(database, 'users/' + sanitizeKey(savedUser));
+                    const snapshot = await get(userRef);
+                    
+                    if (snapshot.exists()) {
+                        currentUser = savedUser;
+                        userData = snapshot.val();
+                        showDashboard();
+                        loadLeaderboard();
+                    } else {
+                        localStorage.removeItem('bendc_current_user');
+                    }
+                } catch (error) {
+                    console.error('Error loading saved user:', error);
+                }
             }
         }
         
